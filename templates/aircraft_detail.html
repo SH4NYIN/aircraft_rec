@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block title %}{{ aircraft.registration }} - AviRec{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <a href="/airlines/{{ aircraft.airline_id }}" class="back-link">← 返回航司机队</a>
+    <h1>{{ aircraft.registration }}</h1>
+    <div class="airline-meta">{{ aircraft.aircraft_type }} · {{ aircraft.airline.name }}</div>
+</div>
+
+<div class="aircraft-detail-layout">
+    <div class="detail-main">
+        <div class="detail-image">
+            {% set has_photo = photos|length > 0 and photos[0].image_url %}
+            {% if has_photo %}
+            <img src="{{ photos[0].image_url }}" alt="{{ aircraft.registration }}">
+            {% elif aircraft.default_image_url %}
+            <img src="{{ aircraft.default_image_url }}" alt="{{ aircraft.registration }}">
+            {% else %}
+            <div class="no-image large">✈</div>
+            {% endif %}
+        </div>
+
+        <div class="info-table">
+            <div class="info-row">
+                <span class="info-label">注册号</span>
+                <span class="info-value">{{ aircraft.registration }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">机型</span>
+                <span class="info-value">{{ aircraft.aircraft_type }}</span>
+            </div>
+            {% if aircraft.msn %}
+            <div class="info-row">
+                <span class="info-label">MSN</span>
+                <span class="info-value">{{ aircraft.msn }}</span>
+            </div>
+            {% endif %}
+            <div class="info-row">
+                <span class="info-label">所属航司</span>
+                <span class="info-value"><a href="/airlines/{{ aircraft.airline_id }}">{{ aircraft.airline.name }}</a></span>
+            </div>
+            {% if aircraft.is_special_livery and aircraft.livery_name %}
+            <div class="info-row special-row">
+                <span class="info-label">🎨 涂装</span>
+                <span class="info-value">{{ aircraft.livery_name }}</span>
+            </div>
+            {% endif %}
+            <div class="info-row">
+                <span class="info-label">状态</span>
+                <span class="info-value {% if is_spotted %}text-green{% else %}text-gray{% endif %}">
+                    {% if is_spotted %}📷 已拍摄{% else %}🛇 未拍摄{% endif %}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="detail-sidebar">
+        <div class="sidebar-card">
+            <h3>拍摄记录</h3>
+            {% if photos %}
+                {% for photo in photos %}
+                <div class="photo-record">
+                    <div class="photo-record-date">{{ photo.taken_date }}</div>
+                    {% if photo.taken_location %}
+                    <div class="photo-record-location">📍 {{ photo.taken_location }}</div>
+                    {% endif %}
+                    {% if photo.notes %}
+                    <div class="photo-record-notes">{{ photo.notes }}</div>
+                    {% endif %}
+                    {% if photo.image_url %}
+                    <img src="{{ photo.image_url }}" alt="" class="photo-record-thumb" loading="lazy">
+                    {% endif %}
+                    <button class="btn-small" onclick="editPhoto({{ photo.id }})">编辑</button>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-gray">尚未拍摄此飞机</p>
+            {% endif %}
+
+            <div class="action-buttons">
+                {% if not is_spotted %}
+                <button class="btn-primary" onclick="markSpotted({{ aircraft.id }})">
+                    📷 标记为已拍摄
+                </button>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if is_spotted and photos %}
+        <div class="sidebar-card" id="photo-edit-card" style="display:none">
+            <h3>编辑拍摄信息</h3>
+            <form id="photo-edit-form" onsubmit="return savePhotoEdit(event)">
+                <input type="hidden" id="edit-photo-id">
+                <label>拍摄日期</label>
+                <input type="date" id="edit-taken-date" class="input-field">
+                <label>拍摄地点</label>
+                <input type="text" id="edit-taken-location" class="input-field" placeholder="如：广州白云机场">
+                <label>备注</label>
+                <textarea id="edit-notes" class="input-field" rows="2" placeholder="拍摄心得..."></textarea>
+                <button type="submit" class="btn-primary">保存</button>
+                <button type="button" class="btn-secondary" onclick="document.getElementById('photo-edit-card').style.display='none'">取消</button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

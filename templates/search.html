@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}搜索 - AviRec{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>搜索飞机</h1>
+    <form method="get" action="/search" class="search-form">
+        <input type="text" name="q" value="{{ query }}" placeholder="输入注册号（如 B-1234）或机型..." class="search-input large">
+        <button type="submit" class="btn-primary">搜索</button>
+    </form>
+</div>
+
+{% if query %}
+<div class="search-results">
+    <p>搜索 "{{ query }}"：找到 <strong>{{ results|length }}</strong> 架飞机</p>
+    <div class="aircraft-grid">
+    {% for ac in results %}
+        {% set is_spotted = ac.id in spotted_ids %}
+        <div class="aircraft-card {% if is_spotted %}spotted{% else %}unspotted{% endif %}">
+            <a href="/aircraft/{{ ac.id }}">
+                <div class="card-image">
+                    {% if ac.default_image_url %}
+                    <img src="{{ ac.default_image_url }}" alt="{{ ac.registration }}" loading="lazy">
+                    {% else %}
+                    <div class="no-image">✈</div>
+                    {% endif %}
+                    <span class="spotted-badge">{% if is_spotted %}📷{% else %}🛇{% endif %}</span>
+                </div>
+                <div class="card-body">
+                    <div class="reg">{{ ac.registration }}</div>
+                    <div class="type">{{ ac.aircraft_type }}</div>
+                    <div class="airline-tag">{{ ac.airline.name_short or ac.airline.name }}</div>
+                </div>
+            </a>
+            <button class="toggle-btn {% if is_spotted %}active{% endif %}"
+                    onclick="toggleSpotted({{ ac.id }}, this)">
+                {% if is_spotted %}✓ 已拍摄{% else %}标记已拍{% endif %}
+            </button>
+        </div>
+    {% else %}
+        <p class="text-gray">未找到匹配的飞机</p>
+    {% endfor %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}

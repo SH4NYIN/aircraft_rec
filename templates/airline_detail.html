@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block title %}{{ airline.name }} - AviRec{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <a href="/airlines" class="back-link">← 返回航司列表</a>
+    <h1>
+        {{ airline.name }}
+        {% if airline.icao_code %}<span class="code-tag">{{ airline.icao_code }}</span>{% endif %}
+    </h1>
+    <div class="airline-meta">
+        <span>已拍 <strong>{{ spotted }}</strong> / <strong>{{ total }}</strong> 架</span>
+        {% if special_total > 0 %}
+        <span>· 🎨 彩绘 <strong>{{ special_total }}</strong> 架</span>
+        {% endif %}
+        {% if notable_total > 0 %}
+        <span>· 🌟 值得关注 <strong>{{ notable_total }}</strong> 架</span>
+        {% endif %}
+        <span>· {{ airline.country }}</span>
+    </div>
+</div>
+
+<!-- 筛选栏 -->
+<form class="fleet-filter-bar" method="get" action="/airlines/{{ airline.id }}">
+    <div class="filter-row">
+        <input type="text" name="search" value="{{ search }}" placeholder="🔍 注册号..." class="filter-input" id="fleet-search" autocomplete="off">
+        <input type="text" name="type_filter" value="{{ type_filter }}" placeholder="🏷️ 机型..." class="filter-input" list="type-list" autocomplete="off">
+        <datalist id="type-list">
+            {% for fam in type_families %}<option value="{{ fam }}">{% endfor %}
+        </datalist>
+        <select name="category" class="filter-select fleet-filter">
+            {% for val, label in category_options %}
+            <option value="{{ val }}" {% if category == val %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+        <select name="notable_filter" class="filter-select fleet-filter">
+            <option value="" {% if not notable_filter %}selected{% endif %}>⭐ 全部</option>
+            <option value="notable" {% if notable_filter == 'notable' %}selected{% endif %}>🌟 值得关注</option>
+            <option value="special_livery" {% if notable_filter == 'special_livery' %}selected{% endif %}>🎨 仅彩绘</option>
+            <option value="normal_only" {% if notable_filter == 'normal_only' %}selected{% endif %}>普通飞机</option>
+        </select>
+        <select name="status" class="filter-select fleet-filter">
+            <option value="" {% if not status %}selected{% endif %}>📷 全部状态</option>
+            <option value="spotted" {% if status == 'spotted' %}selected{% endif %}>已拍摄</option>
+            <option value="unspotted" {% if status == 'unspotted' %}selected{% endif %}>未拍摄</option>
+        </select>
+        <a href="/airlines/{{ airline.id }}" class="filter-reset">重置</a>
+    </div>
+</form>
+
+<!-- 按类别分组展示 -->
+{% for cat_label, aircraft_list in grouped.items() %}
+<div class="category-section">
+    <div class="category-header">
+        <h2>{{ cat_label }} <span class="category-count">{{ aircraft_list|length }}</span></h2>
+        <span class="collapse-icon">▼</span>
+    </div>
+    <div class="aircraft-grid">
+    {% for ac in aircraft_list %}
+        {% set is_spotted = ac.id in spotted_ids %}
+        {% set photo = ac_photos.get(ac.id) %}
+        <div class="aircraft-card {% if is_spotted %}spotted{% else %}unspotted{% endif %}"
+             data-aircraft-id="{{ ac.id }}"
+             data-spotted="{{ is_spotted|lower }}"
+             data-registration="{{ ac.registration }}">
+            <a href="/aircraft/{{ ac.id }}">
+                <div class="card-image">
+                    {% if photo and photo.image_url %}
+                    <img src="{{ photo.image_url }}" alt="{{ ac.registration }}" loading="lazy">
+                    {% elif ac.default_image_url %}
+                    <img src="{{ ac.default_image_url }}" alt="{{ ac.registration }}" loading="lazy">
+                    {% else %}
+                    <div class="no-image">✈</div>
+                    {% endif %}
+                    <span class="spotted-badge">{% if is_spotted %}📷{% else %}🛇{% endif %}</span>
+                </div>
+                <div class="card-body">
+                    <div class="reg">{{ ac.registration }}</div>
+                    <div class="type">{{ ac.aircraft_type }}</div>
+                    <div class="card-tags">
+                        {% if ac.livery_name %}
+                        <span class="tag tag-livery">{{ ac.livery_name }}</span>
+                        {% endif %}
+                        {% if ac.notable and ac.notable_reason %}
+                        <span class="tag tag-notable tag-{{ ac.notable_reason }}">
+                            {% if ac.notable_reason == 'rare_type' %}💎 稀有
+                            {% elif ac.notable_reason == 'vip' %}👑 专机
+                            {% elif ac.notable_reason == 'milestone' %}⭐ 里程碑
+                            {% elif ac.notable_reason == 'retro' %}🕐 复古
+                            {% else %}🌟{% endif %}
+                        </span>
+                        {% endif %}
+                    </div>
+                </div>
+            </a>
+            <button class="toggle-btn {% if is_spotted %}active{% endif %}"
+                    onclick="toggleSpotted({{ ac.id }}, this)"
+                    data-aircraft-id="{{ ac.id }}">
+                {% if is_spotted %}✓ 已拍摄{% else %}标记已拍{% endif %}
+            </button>
+        </div>
+    {% endfor %}
+    </div>
+</div>
+{% endfor %}
+
+{% if not grouped %}
+<div class="empty-state">
+    <p>没有匹配的飞机</p>
+    <a href="/airlines/{{ airline.id }}">清除筛选</a>
+</div>
+{% endif %}
+{% endblock %}

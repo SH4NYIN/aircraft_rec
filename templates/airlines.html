@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}航司列表 - AviRec{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>航司列表</h1>
+    <div class="filter-bar">
+        <input type="text" id="search-airline" placeholder="搜索航司..." class="search-input">
+        <select id="country-filter" class="filter-select" onchange="location.href='?country=' + this.value">
+            <option value="">全部国家/地区</option>
+            {% for c in countries %}
+            <option value="{{ c }}" {% if current_country == c %}selected{% endif %}>{{ c }}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+
+<div class="airline-list">
+{% for stat in airline_stats %}
+    <a href="/airlines/{{ stat.airline.id }}" class="airline-row">
+        <div class="airline-row-logo">
+            {% if stat.airline.logo_url %}
+            <img src="{{ stat.airline.logo_url }}" alt="">
+            {% else %}
+            <span class="logo-placeholder small">{{ stat.airline.name_short or stat.airline.name[:2] }}</span>
+            {% endif %}
+        </div>
+        <div class="airline-row-info">
+            <div class="airline-row-name">{{ stat.airline.name }}</div>
+            <div class="airline-row-code">
+                {{ stat.airline.iata_code }}{% if stat.airline.icao_code %} / {{ stat.airline.icao_code }}{% endif %}
+                · {{ stat.airline.country }}
+            </div>
+        </div>
+        <div class="airline-row-stats">
+            {% if stat.special > 0 %}
+            <span class="badge special-badge">🎨 {{ stat.special }}</span>
+            {% endif %}
+            <div class="progress-text">
+                {{ stat.spotted }} / {{ stat.total }}
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill {% if stat.spotted == stat.total %}complete{% endif %}"
+                     style="width: {% if stat.total > 0 %}{{ (stat.spotted / stat.total * 100)|int }}{% else %}0{% endif %}%"></div>
+            </div>
+        </div>
+        <span class="arrow">›</span>
+    </a>
+{% endfor %}
+</div>
+{% endblock %}

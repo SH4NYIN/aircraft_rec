@@ -1,0 +1,561 @@
+/* === AviRec 样式表 === */
+
+/* ── 基础重置 ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+    --color-bg: #f8f9fa;
+    --color-surface: #ffffff;
+    --color-primary: #2563eb;
+    --color-primary-light: #dbeafe;
+    --color-success: #16a34a;
+    --color-success-light: #dcfce7;
+    --color-special: #f59e0b;
+    --color-special-light: #fef3c7;
+    --color-gray: #9ca3af;
+    --color-gray-dark: #6b7280;
+    --color-text: #1f2937;
+    --color-text-light: #6b7280;
+    --radius: 12px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.1);
+    --shadow-lg: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--color-bg);
+    color: var(--color-text);
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+a { color: inherit; text-decoration: none; }
+
+/* ── 导航栏 ── */
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    background: var(--color-surface);
+    border-bottom: 1px solid #e5e7eb;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+.logo {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-primary);
+}
+.nav-links { display: flex; gap: 16px; }
+.nav-links a {
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+}
+.nav-links a:hover { background: var(--color-primary-light); }
+
+/* ── 容器 ── */
+.container { max-width: 960px; margin: 0 auto; padding: 20px 16px; }
+
+/* ── 首页 Hero ── */
+.hero {
+    text-align: center;
+    padding: 40px 0 24px;
+}
+.hero h1 { font-size: 1.75rem; margin-bottom: 8px; }
+.hero p { color: var(--color-text-light); }
+
+/* ── 统计卡片 ── */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 32px;
+}
+.stat-card {
+    background: var(--color-surface);
+    border-radius: var(--radius);
+    padding: 20px;
+    text-align: center;
+    box-shadow: var(--shadow);
+}
+.stat-card.special { border: 2px solid var(--color-special); }
+.stat-number { font-size: 1.5rem; font-weight: 700; color: var(--color-primary); }
+.stat-label { font-size: 0.85rem; color: var(--color-text-light); margin-top: 4px; }
+
+/* ── 页头 ── */
+.page-header { margin-bottom: 24px; }
+.page-header h1 { font-size: 1.5rem; margin-bottom: 8px; }
+.back-link { color: var(--color-primary); font-size: 0.9rem; }
+.code-tag {
+    display: inline-block;
+    background: var(--color-primary-light);
+    color: var(--color-primary);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    vertical-align: middle;
+    margin-left: 8px;
+}
+.airline-meta { color: var(--color-text-light); font-size: 0.9rem; margin-top: 4px; }
+
+/* ── 航司网格 ── */
+.airline-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+}
+.airline-card {
+    background: var(--color-surface);
+    border-radius: var(--radius);
+    padding: 20px 12px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: block;
+}
+.airline-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.airline-logo { margin-bottom: 8px; }
+.logo-placeholder {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--color-primary-light);
+    color: var(--color-primary);
+    font-weight: 700;
+    font-size: 1rem;
+}
+.logo-placeholder.small { width: 36px; height: 36px; font-size: 0.8rem; }
+.airline-name { font-weight: 600; font-size: 0.95rem; }
+.airline-code { font-size: 0.8rem; color: var(--color-gray-dark); margin-top: 2px; }
+
+/* ── 航司列表行 ── */
+.airline-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--color-surface);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 8px;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s;
+}
+.airline-row:hover { transform: translateX(4px); }
+.airline-row-info { flex: 1; }
+.airline-row-name { font-weight: 600; }
+.airline-row-code { font-size: 0.8rem; color: var(--color-gray-dark); }
+.airline-row-stats { text-align: right; min-width: 120px; }
+.progress-text { font-size: 0.85rem; font-weight: 600; margin-bottom: 4px; }
+.progress-bar {
+    width: 100%;
+    height: 6px;
+    background: #e5e7eb;
+    border-radius: 3px;
+    overflow: hidden;
+}
+.progress-fill {
+    height: 100%;
+    background: var(--color-primary);
+    border-radius: 3px;
+    transition: width 0.3s;
+}
+.progress-fill.complete { background: var(--color-success); }
+.arrow { font-size: 1.5rem; color: var(--color-gray); }
+
+.badge {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+.special-badge { background: var(--color-special-light); color: var(--color-special); }
+
+/* ── 筛选 ── */
+.filter-bar {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}
+.search-input {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+.search-input:focus { border-color: var(--color-primary); }
+.search-input.large { padding: 14px 18px; font-size: 1.05rem; }
+.filter-select {
+    padding: 10px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    background: white;
+    outline: none;
+}
+
+/* ── 机队筛选栏 ── */
+.fleet-filter-bar {
+    background: var(--color-surface);
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+    position: sticky;
+    top: 56px;
+    z-index: 50;
+}
+.filter-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+.filter-input {
+    flex: 1 1 140px;
+    min-width: 120px;
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+.filter-input:focus { border-color: var(--color-primary); }
+.filter-select {
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    background: white;
+    outline: none;
+    cursor: pointer;
+    min-width: 100px;
+}
+.filter-select:focus { border-color: var(--color-primary); }
+.filter-reset {
+    padding: 8px 14px;
+    font-size: 0.85rem;
+    color: var(--color-gray-dark);
+    white-space: nowrap;
+}
+.filter-reset:hover { color: var(--color-primary); }
+
+/* ── 类别分组 section ── */
+.category-section { margin-bottom: 24px; }
+.category-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    background: var(--color-surface);
+    border-radius: var(--radius) var(--radius) 0 0;
+    border-bottom: 2px solid #e5e7eb;
+    cursor: pointer;
+    user-select: none;
+}
+.category-header h2 {
+    font-size: 1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.category-count {
+    font-size: 0.8rem;
+    background: #e5e7eb;
+    color: var(--color-gray-dark);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 500;
+}
+.collapse-icon {
+    font-size: 0.8rem;
+    color: var(--color-gray);
+    transition: transform 0.2s;
+}
+.category-section.collapsed .aircraft-grid { display: none; }
+.category-section.collapsed .collapse-icon { transform: rotate(-90deg); }
+.category-section.collapsed .category-header { border-radius: var(--radius); }
+
+/* ── 飞机卡片网格 ── */
+.special-section {
+    background: var(--color-special-light);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 24px;
+    border: 1px solid var(--color-special);
+}
+.special-section h2 { font-size: 1.1rem; margin-bottom: 12px; }
+.normal-section h2 { font-size: 1.1rem; margin-bottom: 12px; }
+
+.aircraft-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+}
+
+.aircraft-card {
+    background: var(--color-surface);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+.aircraft-card:hover { transform: translateY(-2px); }
+.aircraft-card > a {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 未拍摄 = 灰色 */
+.aircraft-card.unspotted .card-image img,
+.aircraft-card.unspotted .no-image {
+    filter: grayscale(100%);
+    opacity: 0.5;
+}
+.aircraft-card.unspotted { border: 2px solid #e5e7eb; }
+.aircraft-card.spotted { border: 2px solid var(--color-success); }
+
+.card-image {
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    background: #f3f4f6;
+    position: relative;
+}
+.card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: filter 0.3s, opacity 0.3s;
+}
+.no-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-size: 2rem;
+    color: #d1d5db;
+}
+.no-image.large { font-size: 4rem; height: 300px; }
+
+.spotted-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 28px;
+    height: 28px;
+    background: rgba(255,255,255,0.9);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.card-body { padding: 10px 12px; flex: 1; }
+.reg { font-weight: 700; font-size: 0.95rem; }
+.type { font-size: 0.8rem; color: var(--color-gray-dark); }
+.card-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px; }
+.tag {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+.tag-livery { background: var(--color-special-light); color: var(--color-special); }
+.tag-notable { background: #ede9fe; color: #7c3aed; }
+.tag-rare_type { background: #dbeafe; color: #2563eb; }
+.tag-vip { background: #fee2e2; color: #dc2626; }
+.tag-milestone { background: #f3e8ff; color: #9333ea; }
+.tag-retro { background: #fef3c7; color: #d97706; }
+.airline-tag {
+    display: inline-block;
+    font-size: 0.75rem;
+    color: var(--color-primary);
+    margin-top: 4px;
+}
+
+/* ── 按钮 ── */
+.toggle-btn {
+    display: block;
+    width: 100%;
+    padding: 8px;
+    border: none;
+    background: var(--color-primary-light);
+    color: var(--color-primary);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.toggle-btn:hover { background: #bfdbfe; }
+.toggle-btn.active {
+    background: var(--color-success-light);
+    color: var(--color-success);
+}
+.toggle-btn.active:hover { background: #bbf7d0; }
+
+.btn-primary {
+    display: inline-block;
+    padding: 10px 20px;
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.btn-primary:hover { background: #1d4ed8; }
+.btn-secondary {
+    display: inline-block;
+    padding: 10px 20px;
+    background: #e5e7eb;
+    color: var(--color-text);
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    cursor: pointer;
+}
+.btn-small {
+    padding: 4px 10px;
+    background: #f3f4f6;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+
+/* ── 飞机详情页 ── */
+.aircraft-detail-layout {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 24px;
+}
+@media (max-width: 768px) {
+    .aircraft-detail-layout { grid-template-columns: 1fr; }
+}
+
+.detail-image {
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 16px;
+}
+.detail-image img {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+}
+
+.info-table { background: var(--color-surface); border-radius: var(--radius); overflow: hidden; }
+.info-row {
+    display: flex;
+    padding: 12px 16px;
+    border-bottom: 1px solid #f3f4f6;
+}
+.info-row:last-child { border-bottom: none; }
+.info-label { width: 100px; font-size: 0.85rem; color: var(--color-gray-dark); flex-shrink: 0; }
+.info-value { font-weight: 500; }
+.special-row { background: var(--color-special-light); }
+
+.sidebar-card {
+    background: var(--color-surface);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
+}
+.sidebar-card h3 { font-size: 1rem; margin-bottom: 12px; }
+
+.photo-record {
+    padding: 10px 0;
+    border-bottom: 1px solid #f3f4f6;
+}
+.photo-record-date { font-weight: 600; font-size: 0.9rem; }
+.photo-record-location { font-size: 0.85rem; color: var(--color-gray-dark); }
+.photo-record-notes { font-size: 0.85rem; color: var(--color-text-light); margin-top: 4px; }
+.photo-record-thumb {
+    width: 100%;
+    max-height: 120px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-top: 8px;
+}
+
+.action-buttons { margin-top: 12px; }
+.input-field {
+    display: block;
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    outline: none;
+}
+.input-field:focus { border-color: var(--color-primary); }
+
+/* ── 搜索 ── */
+.search-form { display: flex; gap: 8px; margin-top: 12px; }
+.search-results { margin-top: 24px; }
+
+/* ── 文字辅助 ── */
+.text-green { color: var(--color-success); }
+.text-gray { color: var(--color-gray); }
+
+/* ── 页脚 ── */
+.footer {
+    text-align: center;
+    padding: 24px;
+    color: var(--color-gray);
+    font-size: 0.8rem;
+    border-top: 1px solid #e5e7eb;
+    margin-top: 40px;
+}
+
+/* ── 空状态 ── */
+.empty-state {
+    text-align: center;
+    padding: 40px;
+    color: var(--color-gray);
+}
+.empty-state a { color: var(--color-primary); }
+
+/* ── 上传区域 ── */
+.upload-area { padding: 6px 12px 10px; text-align: center; }
+.upload-label {
+    display: inline-block;
+    padding: 6px 14px;
+    background: var(--color-primary-light);
+    color: var(--color-primary);
+    border-radius: 6px;
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+
+/* ── 响应式 ── */
+@media (max-width: 640px) {
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .aircraft-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+    .navbar { padding: 10px 12px; }
+    .container { padding: 12px 10px; }
+}

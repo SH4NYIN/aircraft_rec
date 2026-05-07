@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}AviRec - 首页{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <h1>✈ 飞机拍摄记录器</h1>
+    <p>追踪你拍过的每一架飞机</p>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-number">{{ total_spotted }} / {{ total_aircraft }}</div>
+        <div class="stat-label">已拍摄 / 总收录</div>
+    </div>
+    <div class="stat-card special">
+        <div class="stat-number">{{ spotted_special }} / {{ special_count }}</div>
+        <div class="stat-label">🎨 彩绘机收集</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">{{ airlines|length }}</div>
+        <div class="stat-label">收录航司</div>
+    </div>
+</div>
+
+<div class="section">
+    <h2>航司列表</h2>
+    <div class="airline-grid">
+    {% for airline in airlines %}
+        <a href="/airlines/{{ airline.id }}" class="airline-card">
+            <div class="airline-logo">
+                {% if airline.logo_url %}
+                <img src="{{ airline.logo_url }}" alt="{{ airline.name }}">
+                {% else %}
+                <span class="logo-placeholder">{{ airline.name_short or airline.name[:2] }}</span>
+                {% endif %}
+            </div>
+            <div class="airline-name">{{ airline.name_short or airline.name }}</div>
+            <div class="airline-code">{{ airline.iata_code }}{% if airline.icao_code %} / {{ airline.icao_code }}{% endif %}</div>
+        </a>
+    {% endfor %}
+    </div>
+</div>
+{% endblock %}
